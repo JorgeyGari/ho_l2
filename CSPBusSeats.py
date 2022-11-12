@@ -9,11 +9,14 @@ def intersection(lst1, lst2) -> list:
     return lst3
 
 
-def bus_zone(s, y) -> bool:
-    """Constraint for separating young and older students."""
-    if y == '1':
-        return s < 17
-    return s >= 17
+def front(s) -> bool:
+    """Constraint for students sitting in the back of the bus."""
+    return s < 17
+
+
+def back(s) -> bool:
+    """Constraint for students sitting in the back of the bus."""
+    return s > 16
 
 
 def reduced_mobility(s) -> bool:
@@ -24,7 +27,7 @@ def reduced_mobility(s) -> bool:
 
 def adjacent(s1, s2) -> bool:
     """Determines if two seats are adjacent."""
-    return abs(s1 - s2) == 1 and (s1 - 1) // 4 == (s2 - 1) // 4
+    return abs(s1 - s2) == 1 and (s1 - 1) // 4 == (s2 - 1) // 4 and (s1 % 4) * (s2 % 4) != 6
 
 
 problem = Problem()
@@ -48,9 +51,14 @@ with open(students_path, 'r') as students:
 
         problem.addVariables(st_id, seats)  # Add this student as a new variable
 
-        problem.addConstraint(st_id, bus_zone(st_id, year))  # Constraint for the zone of the bus (back/front)
+        match year:     # Determine zone of the bus depending on the student's school year
+            case 1:
+                problem.addConstraint(front, st_id)
+            case 2:
+                problem.addConstraint(back, st_id)
+
         if mobility == 'R':
-            problem.addConstraint(st_id, reduced_mobility(st_id))
+            problem.addConstraint(reduced_mobility, st_id)
 
         line = students.readline()  # Next line
 
