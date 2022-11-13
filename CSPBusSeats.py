@@ -36,11 +36,11 @@ def surrounding(s) -> list:
         sur.append(s + 1)  # Add seat to the right
 
     if (s - 1) // 4 < 7:  # Check the seat is not in the last row
-        if same_row(s + 4, s + 5):
-            sur.append(s + 5)  # Add seat in the back-left diagonal
-        sur.append(s + 4)  # Add seat behind
         if same_row(s + 4, s + 3):
-            sur.append(s + 3)  # Add seat in the back-right diagonal
+            sur.append(s + 3)  # Add seat in the back-left diagonal
+        sur.append(s + 4)  # Add seat behind
+        if same_row(s + 4, s + 5):
+            sur.append(s + 5)  # Add seat in the back-right diagonal
 
     return sur
 

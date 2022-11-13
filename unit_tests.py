@@ -18,24 +18,24 @@ class Adjacent(unittest.TestCase):
 
 class Surrounding(unittest.TestCase):
     def test_surrounding_base(self):
-        surr = [18, 19, 20, 22, 24, 26, 27, 28]
-        self.assertEqual(CSPBusSeats.surrounding(23), surr)
+        sur = [18, 19, 20, 22, 24, 26, 27, 28]
+        self.assertEqual(CSPBusSeats.surrounding(23), sur)
 
     def test_surrounding_left(self):
-        surr = [1, 2, 6, 9, 10]
-        self.assertEqual(CSPBusSeats.surrounding(5), surr)
+        sur = [1, 2, 6, 9, 10]
+        self.assertEqual(CSPBusSeats.surrounding(5), sur)
 
     def test_surrounding_right(self):
-        surr = [19, 20, 23, 27, 28]
-        self.assertEqual(CSPBusSeats.surrounding(24), surr)
+        sur = [19, 20, 23, 27, 28]
+        self.assertEqual(CSPBusSeats.surrounding(24), sur)
 
     def test_surrounding_front(self):
-        surr = [2, 4, 6, 7, 8]
-        self.assertEqual(CSPBusSeats.surrounding(3), surr)
+        sur = [2, 4, 6, 7, 8]
+        self.assertEqual(CSPBusSeats.surrounding(3), sur)
 
     def test_surrounding_back(self):
-        surr = [25, 26, 27, 29, 31]
-        self.assertEqual(CSPBusSeats.surrounding(30), surr)
+        sur = [25, 26, 27, 29, 31]
+        self.assertEqual(CSPBusSeats.surrounding(30), sur)
 
 
 if __name__ == '__main__':
