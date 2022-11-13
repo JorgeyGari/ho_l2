@@ -1,7 +1,7 @@
-import sys
-from constraint import *
+import unittest
 
 
+# FIXME: I can't import CSPBusSeats.py, so, for now, I will just copy and paste the functions
 def intersection(lst1, lst2) -> list:
     """Returns the intersection of two lists."""
     lst3 = [value for value in lst1 if value in lst2]
@@ -61,42 +61,41 @@ def surrounding(s) -> list:
     return sur
 
 
-problem = Problem()
-seats = [str(i) for i in range(1, 33)]
+class Adjacent(unittest.TestCase):
+    def test_adjacent_window(self):
+        self.assertEqual(adjacent(9, 10), True)
+        self.assertEqual(adjacent(9, 8), False)
 
-students_path = sys.argv[1]  # Path to the input file "students_XX"
+        self.assertEqual(adjacent(8, 7), True)
+
+    def test_adjacent_aisle(self):
+        self.assertEqual(adjacent(26, 25), True)
+        self.assertEqual(adjacent(26, 27), False)
+
+        self.assertEqual(adjacent(27, 28), True)
 
 
-def main():
-    with open(students_path, 'r') as students:
-        line = students.readline()  # Read the first line (first student)
-        while line:
-            line = line.strip('\n')  # Get rid of the unnecessary newline characters
-            data = [int(i) if i.isdigit() else i for i in line.split(',')]  # Split the string to obtain a list of the
-            # student's characteristics
+class Surrounding(unittest.TestCase):
+    def test_surrounding_base(self):
+        surr = [18, 19, 20, 22, 24, 26, 27, 28]
+        self.assertEqual(surrounding(23), surr)
 
-            # Naming some variables to improve readability
-            st_id = data[0]  # Short for "student ID"
-            year = data[1]
-            troublesome = data[2]
-            mobility = data[3]
-            sibling = data[4]
+    def test_surrounding_left(self):
+        surr = [1, 2, 6, 9, 10]
+        self.assertEqual(surrounding(5), surr)
 
-            problem.addVariable(st_id, seats)  # Add this student as a new variable
+    def test_surrounding_right(self):
+        surr = [19, 20, 23, 27, 28]
+        self.assertEqual(surrounding(24), surr)
 
-            match year:  # Determine zone of the bus depending on the student's school year
-                case 1:
-                    problem.addConstraint(front, st_id)
-                case 2:
-                    problem.addConstraint(back, st_id)
+    def test_surrounding_front(self):
+        surr = [2, 4, 6, 7, 8]
+        self.assertEqual(surrounding(3), surr)
 
-            if mobility == 'R':
-                problem.addConstraint(reduced_mobility, st_id)
-
-            line = students.readline()  # Next line
-
-        students.close()
+    def test_surrounding_back(self):
+        surr = [25, 26, 27, 29, 31]
+        self.assertEqual(surrounding(30), surr)
 
 
 if __name__ == '__main__':
-    main()
+    unittest.main()
