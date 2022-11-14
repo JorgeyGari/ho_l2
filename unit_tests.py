@@ -38,7 +38,7 @@ class Surrounding(unittest.TestCase):
         self.assertEqual(CSPBusSeats.surrounding(30), sur)
 
     def test_surrounding_doors(self):
-        sur = [13, 14, 21, 22]
+        sur = [13, 14, 18, 21, 22]
         self.assertEqual(CSPBusSeats.surrounding(17), sur)
 
 
