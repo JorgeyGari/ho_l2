@@ -45,6 +45,16 @@ def surrounding(s) -> list:
     return sur
 
 
+def not_close(troublesome, student) -> bool:
+    """Constraint for a student not to be close to a troublesome student."""
+    return student not in surrounding(troublesome)
+
+
+def next_seat_free(r_mob, student) -> bool:
+    """Constraint for the seat next to a reduced mobility student to be free."""
+    return not adjacent(r_mob, student)
+
+
 def main():
     problem = Problem()
 
@@ -86,10 +96,25 @@ def main():
         if matrix[s][3] == "R":
             domain = intersection(domain, seats["blue"])
 
-        problem.addVariable(str(matrix[s][0]), domain)
+        problem.addVariable(matrix[s][0], domain)
 
     # Constraint: Each student has one and only one seat assigned
     problem.addConstraint(AllDifferentConstraint())
+
+    # Constraint: No troublesome students close to reduced mobility students
+    # Constraint: No troublesome students close to other troublesome students
+    for i in range(0, len(matrix)):
+        if matrix[i][2] == "C" or matrix[i][3] == "R":
+            for j in range(0, len(matrix)):
+                if matrix[j][2] == "C":
+                    problem.addConstraint(not_close, (matrix[i][0], matrix[j][0]))
+
+    # Constraint: Seat next to a reduced mobility must be free
+    for i in range(0, len(matrix)):
+        if matrix[i][3] == "R":
+            for j in range(0, len(matrix)):
+                if i != j:
+                    problem.addConstraint(next_seat_free, (matrix[i][0], matrix[j][0]))
 
     print(problem.getSolution())
 
