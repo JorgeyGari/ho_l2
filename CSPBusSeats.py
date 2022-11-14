@@ -91,7 +91,7 @@ def main():
     # Constraint: Each student has one and only one seat assigned
     problem.addConstraint(AllDifferentConstraint())
 
-    print(problem.getSolutions())
+    print(problem.getSolution())
 
 
 if __name__ == '__main__':
