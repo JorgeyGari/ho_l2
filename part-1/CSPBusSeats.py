@@ -1,12 +1,16 @@
 import sys
 from constraint import *
-import time
 
 
 def intersection(lst1, lst2) -> list:
     """Returns the intersection of two lists."""
     lst3 = [value for value in lst1 if value in lst2]
     return lst3
+
+
+def student_code(matrix, student_id) -> str:
+    """Returns the student code (variable name) of a student given their ID."""
+    return str(matrix[student_id][0]) + matrix[student_id][2] + matrix[student_id][3]
 
 
 def adjacent(s1, s2) -> bool:
@@ -68,7 +72,7 @@ def main():
 
     students_path = sys.argv[1]  # Path to the input file "students_XX"
 
-    matrix = []
+    matrix = []     # This will be a 2D array holding the characteristics of each student
 
     with open(students_path, 'r') as students:
         line = students.readline()  # Read the first line (first student)
@@ -82,9 +86,9 @@ def main():
         students.close()
 
     for s in range(0, len(matrix)):
-        domain = seats["all"]
+        domain = seats["all"]   # Default domain is the whole bus
 
-        if matrix[s][4] != 0:
+        if matrix[s][4] != 0:   # If the student has a sibling
             if matrix[matrix[s][4]][1] != matrix[s][1]:     # Siblings in different years
                 domain = seats["front"]
             if matrix[matrix[s][4]][3] == "R":  # One sibling has reduced mobility
@@ -103,7 +107,7 @@ def main():
         if matrix[s][3] == "R":
             domain = intersection(domain, seats["blue"])
 
-        problem.addVariable(matrix[s][0], domain)
+        problem.addVariable(student_code(matrix, s), domain)
 
     # Constraint: Each student has one and only one seat assigned
     problem.addConstraint(AllDifferentConstraint())
@@ -114,22 +118,24 @@ def main():
         if matrix[i][2] == "C" or matrix[i][3] == "R":
             for j in range(0, len(matrix)):
                 if matrix[j][2] == "C":
-                    problem.addConstraint(not_close, (matrix[i][0], matrix[j][0]))
+                    problem.addConstraint(not_close, (student_code(matrix, i), student_code(matrix, j)))
 
     # Constraint: Seat next to a reduced mobility must be free
     for i in range(0, len(matrix)):
         if matrix[i][3] == "R":
             for j in range(0, len(matrix)):
                 if i != j:
-                    problem.addConstraint(next_seat_free, (matrix[i][0], matrix[j][0]))
+                    problem.addConstraint(next_seat_free, (student_code(matrix, i), student_code(matrix, j)))
 
     # Constraint: Siblings must sit together
     for i in range(0, len(matrix)):
         if matrix[i][4] != 0:
-            problem.addConstraint(adjacent, (matrix[i][0], matrix[matrix[i][4] - 1][0]))
+            problem.addConstraint(adjacent, (student_code(matrix, i), student_code(matrix, matrix[i][4] - 1)))
 
-    print(problem.getSolution())
-    # print(problem.getSolutions())   # Takes about 30 seconds
+    sol = problem.getSolution()
+    sols = problem.getSolutions()   # Takes about 30 seconds
+    print(f"Number of solutions: {len(sols)}")
+    print(sol)
 
 
 if __name__ == '__main__':
