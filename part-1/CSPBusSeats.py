@@ -1,4 +1,5 @@
 import sys
+
 from constraint import *
 
 
@@ -72,8 +73,9 @@ def main():
 
     students_path = sys.argv[1]  # Path to the input file "students_XX"
 
-    matrix = []     # This will be a 2D array holding the characteristics of each student
+    matrix = []  # This will be a 2D array holding the characteristics of each student
 
+    print("Reading ", sys.argv[1], "...")
     with open(students_path, 'r') as students:
         line = students.readline()  # Read the first line (first student)
         while line:
@@ -84,15 +86,17 @@ def main():
             line = students.readline()  # Next line
 
         students.close()
+        print("Done.\n")
 
+    print("Adding variables...")
     for s in range(0, len(matrix)):
-        domain = seats["all"]   # Default domain is the whole bus
+        domain = seats["all"]  # Default domain is the whole bus
 
-        if matrix[s][4] != 0:   # If the student has a sibling
-            if matrix[matrix[s][4] - 1][1] != matrix[s][1]:     # Siblings in different years
+        if matrix[s][4] != 0:  # If the student has a sibling
+            if matrix[matrix[s][4] - 1][1] != matrix[s][1]:  # Siblings in different years
                 domain = seats["front"]
             if matrix[matrix[s][4] - 1][3] == "R":  # One sibling has reduced mobility
-                match matrix[matrix[s][4]]:     # The other sibling must sit in the same zone
+                match matrix[matrix[s][4] - 1][1]:  # The other sibling must sit in the same zone
                     case 1:
                         domain = seats["front"]
                     case 2:
@@ -109,7 +113,10 @@ def main():
 
         problem.addVariable(student_code(matrix, s), domain)
 
+    print("Done.\n")
+
     # Constraint: Each student has one and only one seat assigned
+    print("Adding constraints...")
     problem.addConstraint(AllDifferentConstraint())
 
     # Constraint: No troublesome students close to reduced mobility students
@@ -132,10 +139,17 @@ def main():
         if matrix[i][4] != 0:
             problem.addConstraint(adjacent, (student_code(matrix, i), student_code(matrix, matrix[i][4] - 1)))
 
-    sol = problem.getSolution()
-    sols = problem.getSolutions()   # Takes about 30 seconds
+    print("Done.\n")
+
+    print("Getting solution iterable...")
+    sol = problem.getSolutionIter()
+    print("Getting solutions...")
+    sols = problem.getSolutions()
     print(f"Number of solutions: {len(sols)}")
-    print(sol)
+    if len(sols) > 0:
+        print(next(sol))
+    if len(sols) > 1:
+        print(next(sol))
 
 
 if __name__ == '__main__':
