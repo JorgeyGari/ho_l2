@@ -89,9 +89,9 @@ def main():
         domain = seats["all"]   # Default domain is the whole bus
 
         if matrix[s][4] != 0:   # If the student has a sibling
-            if matrix[matrix[s][4]][1] != matrix[s][1]:     # Siblings in different years
+            if matrix[matrix[s][4] - 1][1] != matrix[s][1]:     # Siblings in different years
                 domain = seats["front"]
-            if matrix[matrix[s][4]][3] == "R":  # One sibling has reduced mobility
+            if matrix[matrix[s][4] - 1][3] == "R":  # One sibling has reduced mobility
                 match matrix[matrix[s][4]]:     # The other sibling must sit in the same zone
                     case 1:
                         domain = seats["front"]
