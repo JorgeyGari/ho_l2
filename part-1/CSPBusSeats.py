@@ -127,8 +127,7 @@ def main():
                 if matrix[j][2] == "C":
                     problem.addConstraint(not_close, (student_code(matrix, i), student_code(matrix, j)))
 
-    # Constraint: Seat next to a reduced mobility must be free
-    for i in range(0, len(matrix)):
+        # Constraint: Seat next to a reduced mobility must be free
         if matrix[i][3] == "R":
             for j in range(0, len(matrix)):
                 if i != j:
@@ -143,11 +142,11 @@ def main():
 
     print("Getting solution iterable...")
     sol = problem.getSolutionIter()
-    print("Getting solutions...")
+    print("Getting solutions...\n")
     sols = problem.getSolutions()
     print(f"Number of solutions: {len(sols)}")
     if len(sols) > 0:
-        print(next(sol))
+        print(sorted(next(sol).items(), key=lambda x: x[1]))
     if len(sols) > 1:
         print(next(sol))
 
