@@ -136,7 +136,6 @@ def main():
                     problem.addConstraint(next_seat_free, (student_code(matrix, i), student_code(matrix, j)))
 
     # Constraint: Siblings must sit together
-    for i in range(0, len(matrix)):
         if matrix[i][4] != 0:
             problem.addConstraint(adjacent, (student_code(matrix, i), student_code(matrix, matrix[i][4] - 1)))
 
