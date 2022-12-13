@@ -1,4 +1,5 @@
 import sys
+from pathlib import Path
 
 from constraint import *
 
@@ -150,6 +151,17 @@ def main():
         print(next(sol))
     if len(sols) > 1:
         print(next(sol))
+
+
+    # Print in file
+    filename = Path(students_path).stem
+    filename += '.output'
+    with open(filename, 'w') as f:
+        f.write("Number of solutions: ")
+        f.write(str(len(sols)))
+        for i in range(1, 5):
+            f.write("\n")
+            f.write(str(next(sol)))
 
 
 if __name__ == '__main__':
