@@ -97,7 +97,9 @@ class AStar_Solver:
     def heuristic2(self, node) -> int:
         """Heuristic function that returns the number of students that are still waiting to get on the bus, with
         the troublesome students having double value."""
-        pass
+        remaining_students = [i for i in range(1, len(self.student_data) + 1) if i not in node.state]
+        remaining_students += [i for i in range(1, len(self.student_data) + 1) if i not in node.state and self.student_data[i][1] == 'C']
+        return len(remaining_students)
 
     def Solve(self):
         startNode = Node(None, None, 0, 0)
@@ -123,7 +125,7 @@ class AStar_Solver:
                     self.priorityQueue.put((child_priority, child))  # Add the child to the open nodes list
 
         if not self.path:
-            print("Goal is not possible!")
+            print("No solution!")
         return self.path
 
 
@@ -155,7 +157,7 @@ def studentsDict(students_path) -> dict:
 
 def main():
     students_path = sys.argv[1]  # Path to the input file
-    problem = AStar_Solver([], [], studentsDict(students_path), 1)
+    problem = AStar_Solver([], [], studentsDict(students_path), sys.argv[2])
     problem.Solve()
 
 
