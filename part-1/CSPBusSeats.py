@@ -70,7 +70,7 @@ def main():
         "blue": [1, 2, 3, 4, 13, 14, 15, 16, 17, 18, 19, 20],  # Seats reserved for reduced mobility students
         "front": [i for i in range(1, 17)],  # Seats on the front of the bus
         "back": [i for i in range(17, 33)],  # Seats on the back of the bus
-        "aisle": [i for i in range(1, 33) if (i - 1) % 4 in (1, 2)]     # Seats next to the bus
+        "aisle": [i for i in range(1, 33) if (i - 1) % 4 in (1, 2)]  # Seats next to the bus
     }
 
     students_path = sys.argv[1]  # Path to the input file "students_XX"
@@ -97,7 +97,7 @@ def main():
         if matrix[s][4] != 0:  # If the student has a sibling
             if matrix[matrix[s][4] - 1][1] != matrix[s][1]:  # Siblings in different years
                 domain = seats["front"]
-                if matrix[s][2] == 2:   # The older sibling...
+                if matrix[s][2] == 2:  # The older sibling...
                     domain = intersection(domain, seats["aisle"])
             if matrix[matrix[s][4] - 1][3] == "R":  # One sibling has reduced mobility
                 match matrix[matrix[s][4] - 1][1]:  # The other sibling must sit in the same zone
@@ -130,13 +130,13 @@ def main():
                 if matrix[j][2] == "C":
                     problem.addConstraint(not_close, (student_code(matrix, i), student_code(matrix, j)))
 
-    # Constraint: Seat next to a reduced mobility student must be free
+        # Constraint: Seat next to a reduced mobility student must be free
         if matrix[i][3] == "R":
             for j in range(0, len(matrix)):
                 if i != j:
                     problem.addConstraint(next_seat_free, (student_code(matrix, i), student_code(matrix, j)))
 
-    # Constraint: Siblings must sit together
+        # Constraint: Siblings must sit together
         if matrix[i][4] != 0:
             problem.addConstraint(adjacent, (student_code(matrix, i), student_code(matrix, matrix[i][4] - 1)))
 
@@ -151,7 +151,6 @@ def main():
         print(next(sol))
     if len(sols) > 1:
         print(next(sol))
-
 
     # Print in file
     filename = Path(students_path).stem
