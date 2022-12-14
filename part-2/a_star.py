@@ -51,8 +51,8 @@ class Node:
 
         seated_C = [student_data[i][0] for i in self.state if student_data[i][1] == 'C']  # List of seats taken by troublesome students
 
-        if len(seated_C) != 0:
-            if student_data[self.studentID][0] > min(seated_C):  # If the current student is sitting behind a troublesome student
+        for c in seated_C:
+            if student_data[self.studentID][0] > c:  # Time doubles for each troublesome student sitting in front
                 time *= 2
 
         return time
@@ -116,13 +116,14 @@ class AStar_Solver:
 
                     if self.heuristic(child) == 0:  # if child is goal
                         self.path = child.path  # Set the path to the child's path
-                        print(child.path)
+                        print("Optimal positions in the queue:", child.path[-1])
+                        print("Total time:", child.cost)
                         break  # Break out of the loop because we have found a solution
 
                     self.priorityQueue.put((child_priority, child))  # Add the child to the open nodes list
 
         if not self.path:
-            print("Goal of " + self.end + " is not possible!")
+            print("Goal is not possible!")
         return self.path
 
 
