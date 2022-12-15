@@ -14,3 +14,15 @@ Here is an overview of what each test case `studentsXX` represents.
 * **students06**: Case with six (maximum) reduced mobility students
 * **students07**: Case with nine troublesome students (exceeds maximum)
 * **students08**: Case with one single student who can sit on the front
+
+# Test cases for Part 2
+Here is an overview of what each test case `studentsXX.prob` represents.
+* **students01.prob**: Example case provided in the statement.
+* **students02.prob**: Case where all students are reduced mobility students with no one to help them get on the bus.
+* **students03.prob**: Case where each student with reduced mobility has another student to help them get on the bus.
+* **students04.prob**: Case where there are no reduced mobility students or troublesome students.
+* **students05.prob**: Case where all students are troublesome students but there are no reduced mobility students.
+* **students06.prob**: Case where there is only one troublesome student and one reduced mobility student among other students.
+* **students07.prob**: Case where there are only two students and one of them has reduced mobility.
+* **students08.prob**: Case where there are only two students and one of them is troublesome and sits in front of the other one.
+* **students09.prob**: Case where there are only two students and one of them is troublesome and sits behind the other one.
