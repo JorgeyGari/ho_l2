@@ -131,8 +131,6 @@ class AStarSolver:
 
                     self.priorityQueue.put((child_priority, child))  # Add the child to the open nodes list
 
-        if not self.path:
-            print("No solution!")
         return self.path, self.visitedQueue, sol_cost
 
 
@@ -169,37 +167,41 @@ def main():
     end_time = time.time()
 
 # Output the file with the solution
-    filename = Path(students_path).stem + "-" + sys.argv[2]
-    filename += '.output'
+    filename = Path(students_path).with_stem(Path(students_path).stem + "-" + sys.argv[2]).with_suffix('.output')
     with open(filename, 'w') as f:
-        f.write("INITIAL: {")
+        if sol[0]:
+            f.write("INITIAL: {")
 
-        counter = 0
-        for key, value in sorted(students_dict.items(), key=lambda item: item[1][0]):
-            counter += 1
-            f.write(f"'{key}{value[1]}{value[2]}': {value[0]}")
+            counter = 0
+            for key, value in sorted(students_dict.items(), key=lambda item: item[1][0]):
+                counter += 1
+                f.write(f"'{key}{value[1]}{value[2]}': {value[0]}")
 
-            if counter != len(students_dict):  # If this is not the student with the highest assigned seat
-                f.write(", ")
+                if counter != len(students_dict):  # If this is not the student with the highest assigned seat
+                    f.write(", ")
 
-        f.write("}\n")
+            f.write("}\n")
 
-        f.write("FINAL:   {")
-        for i in sol[0][-1]:
-            f.write(f"'{i}{students_dict[i][1]}{students_dict[i][2]}': {students_dict[i][0]}")
-            if i != sol[0][-1][-1]:  # If this is not the last student to get on the bus
-                f.write(", ")
+            f.write("FINAL:   {")
+            for i in sol[0][-1]:
+                f.write(f"'{i}{students_dict[i][1]}{students_dict[i][2]}': {students_dict[i][0]}")
+                if i != sol[0][-1][-1]:  # If this is not the last student to get on the bus
+                    f.write(", ")
 
-        f.write("}\n")
+            f.write("}\n")
+        else:
+            f.write("No solution!")
 
 # Output the file with the execution statistics
-    filename = Path(students_path).stem + "-" + sys.argv[2]
-    filename += '.stat'
+    filename = Path(students_path).with_stem(Path(students_path).stem + "-" + sys.argv[2]).with_suffix('.stat')
     with open(filename, 'w') as f:
         f.write(f"Total time: {end_time - start_time}\n")  # Time A* took to find a solution
-        f.write(f"Total cost: {sol[2]}\n")  # Cost of the solution (total time taken by the students to get on the bus)
-        f.write(f"Plan length: {len(sol[0]) - 1}\n")  # Depth of the solution
-        f.write(f"Plan cost: {len(sol[1])}\n")  # Number of nodes expanded before finding the solution
+        if sol:
+            f.write(f"Total cost: {sol[2]}\n")  # Cost of the solution
+            f.write(f"Plan length: {len(sol[0]) - 1}\n")  # Depth of the solution
+            f.write(f"Plan cost: {len(sol[1])}\n")  # Number of nodes expanded before finding the solution
+        else:
+            f.write(f"No solution!")
 
 
 if __name__ == '__main__':

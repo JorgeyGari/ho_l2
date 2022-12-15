@@ -77,7 +77,6 @@ def main():
 
     matrix = []  # This will be a 2D array holding the characteristics of each student
 
-    print("Reading ", sys.argv[1], "...")
     with open(students_path, 'r') as students:
         line = students.readline()  # Read the first line (first student)
         while line:
@@ -88,17 +87,15 @@ def main():
             line = students.readline()  # Next line
 
         students.close()
-        print("Done.\n")
 
-    print("Adding variables...")
     for s in range(0, len(matrix)):
         domain = seats["all"]  # Default domain is the whole bus
 
         if matrix[s][4] != 0:  # If the student has a sibling
             if matrix[matrix[s][4] - 1][1] != matrix[s][1]:  # Siblings in different years
-                domain = seats["front"]
+                domain = seats["front"]  # Both siblings sit in the front
                 if matrix[s][2] == 2:  # The older sibling...
-                    domain = intersection(domain, seats["aisle"])
+                    domain = intersection(domain, seats["aisle"])   # ...must sit in an aisle seat
             if matrix[matrix[s][4] - 1][3] == "R":  # One sibling has reduced mobility
                 match matrix[matrix[s][4] - 1][1]:  # The other sibling must sit in the same zone
                     case 1:
@@ -117,10 +114,7 @@ def main():
 
         problem.addVariable(student_code(matrix, s), domain)
 
-    print("Done.\n")
-
-    # Constraint: Each student has one and only one seat assigned
-    print("Adding constraints...")
+    # Constraint: Each student has one and only one seat assigned, not shared with anyone else
     problem.addConstraint(AllDifferentConstraint())
 
     # Constraint: No troublesome students close to reduced mobility students or other troublesome students
@@ -140,27 +134,20 @@ def main():
         if matrix[i][4] != 0:
             problem.addConstraint(adjacent, (student_code(matrix, i), student_code(matrix, matrix[i][4] - 1)))
 
-    print("Done.\n")
-
-    print("Getting solution iterable...")
     sol = problem.getSolutionIter()
-    print("Getting solutions...\n")
     sols = problem.getSolutions()
-    print(f"Number of solutions: {len(sols)}")
-    if len(sols) > 0:
-        print(next(sol))
-    if len(sols) > 1:
-        print(next(sol))
 
     # Print in file
-    filename = Path(students_path).stem
-    filename += '.output'
+    filename = Path(students_path).with_suffix(".output")
     with open(filename, 'w') as f:
         f.write("Number of solutions: ")
         f.write(str(len(sols)))
-        for i in range(1, 5):
-            f.write("\n")
-            f.write(str(next(sol)))
+        for i in range(0, 4):
+            if len(sols) > i:
+                f.write("\n")
+                f.write(str(next(sol)))
+
+        f.close()
 
 
 if __name__ == '__main__':
