@@ -30,34 +30,34 @@ class Node:
     def GetTime(self, student_data) -> int:
         """Get the time that it takes for the student to get on the bus"""
 
-        time = 1  # Default time to get on the bus
+        time_taken = 1  # Default time to get on the bus
         previous_student = self.parent.studentID  # Student in front of the current one
 
         if student_data[self.studentID][2] == 'R':  # If the current student has reduced mobility
-            time = 0  # The student behind will help them get on the bus
+            time_taken = 0  # The student behind will help them get on the bus
 
         if previous_student == 0:  # If the current student is the first one to get on the bus
-            return time
+            return time_taken
 
         if student_data[previous_student][2] == 'R':  # If the previous student had reduced mobility
-            time *= 3  # The student takes the time needed by the reduced mobility
+            time_taken *= 3  # The student takes the time needed by the reduced mobility
             if student_data[self.studentID][1] == 'C':
-                time *= 2  # Troublesome students take twice as much time to help a reduced mobility student
+                time_taken *= 2  # Troublesome students take twice as much time to help a reduced mobility student
 
         if student_data[previous_student][1] == 'C':  # If the previous student was troublesome
-            time *= 2  # Double the time to get on the bus
+            time_taken *= 2  # Double the time to get on the bus
 
         if student_data[self.studentID][1] == 'C':  # If the current student is troublesome
-            time += self.parent.GetTime(student_data)  # Double the time of the previous student
+            time_taken += self.parent.GetTime(student_data)  # Double the time of the previous student
 
-        seated_c = [student_data[i][0] for i in self.state if
+        seated_c = [student_data[i][0] for i in self.parent.state if
                     student_data[i][1] == 'C']  # List of seats taken by troublesome students
 
         for c in seated_c:
             if student_data[self.studentID][0] > c:  # Time doubles for each troublesome student sitting in front
-                time *= 2
+                time_taken *= 2
 
-        return time
+        return time_taken
 
     def CreateChildren(self, student_data):
         remaining_students = [i for i in range(1, len(student_data) + 1) if i not in self.state]
@@ -79,12 +79,11 @@ class Node:
 
 
 class AStarSolver:
-    def __init__(self, start, end, student_data, heuristic):
+    def __init__(self, start, student_data, heuristic):
         self.path = []
         self.visitedQueue = []
         self.priorityQueue = PriorityQueue()
         self.start = start
-        self.end = end
         self.student_data = student_data
 
         match heuristic:
@@ -121,7 +120,7 @@ class AStarSolver:
 
             for child in closest_child.children:  # For each child of the node
                 if child.state not in self.visitedQueue:  # If the child state is not in the visited states list
-                    child_priority = child.GetTime(self.student_data) + self.heuristic(
+                    child_priority = child.cost + self.heuristic(
                         child)  # Calculate the priority of the child (function f = g + h)
 
                     if self.heuristic(child) == 0:  # If the child is a goal
@@ -161,12 +160,12 @@ def studentsDict(students_path) -> dict:
 def main():
     students_path = sys.argv[1]  # Path to the input file
     students_dict = studentsDict(students_path)
-    problem = AStarSolver([], [], studentsDict(students_path), sys.argv[2])
+    problem = AStarSolver([], studentsDict(students_path), sys.argv[2])
     start_time = time.time()
     sol = problem.Solve()
     end_time = time.time()
 
-# Output the file with the solution
+    # Output the file with the solution
     filename = Path(students_path).with_stem(Path(students_path).stem + "-" + sys.argv[2]).with_suffix('.output')
     with open(filename, 'w') as f:
         if sol[0]:
@@ -192,7 +191,7 @@ def main():
         else:
             f.write("No solution!")
 
-# Output the file with the execution statistics
+    # Output the file with the execution statistics
     filename = Path(students_path).with_stem(Path(students_path).stem + "-" + sys.argv[2]).with_suffix('.stat')
     with open(filename, 'w') as f:
         f.write(f"Total time: {end_time - start_time}\n")  # Time A* took to find a solution

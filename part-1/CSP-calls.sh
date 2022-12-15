@@ -5,4 +5,3 @@ python3 CSPBusSeats.py ./CSP-tests/students04
 python3 CSPBusSeats.py ./CSP-tests/students05
 python3 CSPBusSeats.py ./CSP-tests/students06
 python3 CSPBusSeats.py ./CSP-tests/students07
-python3 CSPBusSeats.py ./CSP-tests/students08

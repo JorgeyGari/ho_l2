@@ -117,8 +117,8 @@ def main():
     # Constraint: Each student has one and only one seat assigned, not shared with anyone else
     problem.addConstraint(AllDifferentConstraint())
 
-    # Constraint: No troublesome students close to reduced mobility students or other troublesome students
     for i in range(0, len(matrix)):
+        # Constraint: No troublesome students close to reduced mobility students or other troublesome students
         if matrix[i][2] == "C" or matrix[i][3] == "R":
             for j in range(0, len(matrix)):
                 if matrix[j][2] == "C":
