@@ -198,7 +198,7 @@ def main():
         if sol:
             f.write(f"Total cost: {sol[2]}\n")  # Cost of the solution
             f.write(f"Plan length: {len(sol[0]) - 1}\n")  # Depth of the solution
-            f.write(f"Plan cost: {len(sol[1])}\n")  # Number of nodes expanded before finding the solution
+            f.write(f"Expanded nodes: {len(sol[1])}\n")  # Number of nodes expanded before finding the solution
         else:
             f.write(f"No solution!")
 

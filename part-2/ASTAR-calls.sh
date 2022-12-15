@@ -12,7 +12,3 @@ python3 ASTARBusQ.py ./ASTAR-tests/students06.prob 1
 python3 ASTARBusQ.py ./ASTAR-tests/students06.prob 2
 python3 ASTARBusQ.py ./ASTAR-tests/students07.prob 1
 python3 ASTARBusQ.py ./ASTAR-tests/students07.prob 2
-python3 ASTARBusQ.py ./ASTAR-tests/students08.prob 1
-python3 ASTARBusQ.py ./ASTAR-tests/students08.prob 2
-python3 ASTARBusQ.py ./ASTAR-tests/students09.prob 1
-python3 ASTARBusQ.py ./ASTAR-tests/students09.prob 2
